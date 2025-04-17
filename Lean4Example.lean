@@ -41,8 +41,3 @@ theorem sorry_test : (p ∧ q) → (p → q → r) → r := by
   apply h2
   sorry
   exact h1.2
-
-theorem sorry_test2 : (p ∧ q) → (p → q → r) → r := by
-  intro h1 h2
-  apply h2
-  exact h1.2
