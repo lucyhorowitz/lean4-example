@@ -16,16 +16,16 @@ def create_node(tx, node_dict, parent_id=None):
     node_id = str(uuid.uuid4())
     print("creating ASTNode(kind={}, id={})".format(node_dict.get("kind"), node_id))
     tx.run(
-        "CREATE (n:ASTNode {id: $id, kind: $kind, info: $info})",
+        "CREATE (n:`" + node_dict.get("kind") + "` {id: $id, kind: $kind, info: $info, position: $position})",
         id=node_id,
         kind=node_dict.get("kind"),
-        info=node_dict.get("info")
+        info=node_dict.get("info"),
+        position=node_dict.get("position")
     )
     # link to parent
     if parent_id:
         tx.run(
-            "MATCH (p:ASTNode {id: $parent_id}), (n:ASTNode {id: $id}) "
-            "CREATE (p)-[:HAS_ARG]->(n)",
+            "MATCH (p {id: $parent_id}), (n {id: $id}) CREATE (p)-[:HAS_ARG]->(n)",
             parent_id=parent_id, id=node_id
         )
     # recurse into arguments
@@ -36,26 +36,26 @@ def create_node(tx, node_dict, parent_id=None):
             leaf = arg["atom"]
             leaf_id = str(uuid.uuid4())
             tx.run(
-                "CREATE (l:ASTToken {id: $id, type: 'atom', val: $val})",
+                "CREATE (l:ASTToken {id: $id, type: 'atom', val: $val, position: $position})",
                 id=leaf_id,
-                val=leaf.get("val")
+                val=leaf.get("val"),
+                position=leaf.get("position")
             )
             tx.run(
-                "MATCH (p:ASTNode {id: $parent_id}), (l:ASTToken {id: $id}) "
-                "CREATE (p)-[:HAS_TOKEN]->(l)",
+                "MATCH (p {id: $parent_id}), (l {id: $id}) CREATE (p)-[:HAS_TOKEN]->(l)",
                 parent_id=node_id, id=leaf_id
             )
         elif "ident" in arg:
             leaf = arg["ident"]
             leaf_id = str(uuid.uuid4())
             tx.run(
-                "CREATE (l:ASTToken {id: $id, type: 'ident', val: $val})",
+                "CREATE (l:ASTToken {id: $id, type: 'ident', val: $val, position: $position})",
                 id=leaf_id,
-                val=leaf.get("val")
+                val=leaf.get("val"),
+                position=leaf.get("position")
             )
             tx.run(
-                "MATCH (p:ASTNode {id: $parent_id}), (l:ASTToken {id: $id}) "
-                "CREATE (p)-[:HAS_TOKEN]->(l)",
+                "MATCH (p {id: $parent_id}), (l {id: $id}) CREATE (p)-[:HAS_TOKEN]->(l)",
                 parent_id=node_id, id=leaf_id
             )
     return node_id
