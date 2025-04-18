@@ -1,5 +1,4 @@
 import Mathlib.Tactic
--- imports all the Lean tactics
 import Mathlib.Order.Filter.Basic
 
 open Nat
@@ -46,8 +45,6 @@ theorem sorry_test : (p ∧ q) → (p → q → r) → r := by
 inductive X : Type
   | a : X
 
--- in fact the term of type X is called `X.a`.
--- Let Y be {b,c}
 inductive Y : Type
   | b : Y
   | c : Y
@@ -58,7 +55,6 @@ inductive Z : Type
 def f : X → Y
   | X.a => Y.b
 
--- define g by g(Y.b)=g(Y.c)=Z.d
 def g : Y → Z
   | Y.b => Z.d
   | Y.c => Z.d
@@ -68,7 +64,7 @@ theorem gf_injective : Injective (g ∘ f) := by
   rfl
 
 theorem gYb_eq_gYc : g Y.b = g Y.c :=
-  by-- they're both definitionally `Z.d`
+  by
   rfl
 
 example : ¬∀ A B C : Type, ∀ (ψ1 : A → B) (ψ2 : B → C), Injective (ψ2 ∘ ψ1) → Injective ψ2 := by
