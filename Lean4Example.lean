@@ -75,3 +75,8 @@ example : ¬∀ A B C : Type, ∀ (ψ1 : A → B) (ψ2 : B → C), Injective (ψ
   intro h
   specialize h X Y Z f g gf_injective gYb_eq_gYc
   cases h
+
+theorem name_test :  ¬∀ A B C : Type, ∀ (ψ1 : A → B) (ψ2 : B → C), Injective (ψ2 ∘ ψ1) → Injective ψ2 := by
+  intro h
+  specialize h X Y Z f g gf_injective gYb_eq_gYc
+  cases h
